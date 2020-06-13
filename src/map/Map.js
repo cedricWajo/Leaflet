@@ -852,6 +852,23 @@ export var Map = Evented.extend({
 	// @method getBounds(): LatLngBounds
 	// Returns the geographical bounds visible in the current map view
 	getBounds: function () {
+		if (this._rotate ) {
+			console.log('start')
+			console.log(this._bearing)
+			if(this._bearing%Math.PI<Math.PI/2 ) {
+				var dy = new Point(0,this.getSize().x * Math.sin(this._bearing));
+			} else {
+				var dy = new Point(-this.getSize().x * Math.cos(this._bearing),0);
+				console.log(dy)
+			}
+
+			//var dy = new Point(0,10);
+			var nw = this.containerPointToLayerPoint(new Point(0,0) )._subtract(dy);
+			var se = this.containerPointToLayerPoint(this.getSize())._add(dy);
+
+			return new LatLngBounds(this.layerPointToLatLng(se), this.layerPointToLatLng(nw));
+		}
+
 		var bounds = this.getPixelBounds(),
 		    sw = this.unproject(bounds.getBottomLeft()),
 		    ne = this.unproject(bounds.getTopRight());
