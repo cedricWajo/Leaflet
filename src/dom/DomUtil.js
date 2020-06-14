@@ -224,9 +224,10 @@ export function setTransform(el, offset, scale, bearing, pivot) {
 				'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)' +
 				(scale ? ' scale(' + scale + ')' : '') +
 				' rotate(' + bearing + 'rad)';
+		el.style.transformOrigin = '50% 100%';
 	}
 
-    el.style.transformOrigin = '50% 100%';
+    //el.style.transformOrigin = '50% 100%';
 }
 
 // @function setPosition(el: HTMLElement, position: Point)

@@ -41,6 +41,11 @@
 	Padding:<br>
 	<input type="range" min="-0.25" max="0" value="-0.05" step="0.01" name="pad" id='pad_input' style='width:800px' onchange="displayCenter()" onmousemove="displayCenter()"/>
 
+	<div>
+		<button onclick="zoom(1);" > zoom in</button>
+		<button onclick="zoom(-1);">zoom out</button>
+
+	</div>
 	<script type="text/javascript">
 
 		var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -50,6 +55,18 @@
 		var map = L.map('map', {rotate: true})
 				.setView([0, 0], 4)
 				.addLayer(osm);
+
+		var marker = [50,4]
+		var polygon = [
+			[50,4],
+			[50.1,4.1],
+			[50.1,4.2],
+			[50.4,4.3],
+				]
+		var marker1 = L.marker(marker).addTo(map);
+		L.polyline(polygon).addTo(map);
+
+		map.panTo([50,4])
 
 		function rotate(ev) {
 			if (ev.buttons === 0) return;
@@ -61,6 +78,10 @@
 		function rotateFromButton(angle) {
 			document.getElementById('rho_input').valueAsNumber = angle;
 			map.setBearing(angle);
+		}
+
+		function zoom(diff) {
+			map.setZoom(map.getZoom()+diff,{animate :true, duration:10});
 		}
 
 		document.getElementById('rho_input').addEventListener('change', rotate);

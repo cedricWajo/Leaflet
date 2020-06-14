@@ -3,8 +3,7 @@
 <head>
 	<title>Leaflet debug page</title>
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.css" />
-
+	<link rel="stylesheet" href="../../dist/leaflet.css" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<link rel="stylesheet" href="../css/screen.css" />
@@ -111,7 +110,11 @@
 		<button onclick="rotateFromButton(75);">75</button>
 		<button onclick="rotateFromButton(90);">90</button>
 	</div>
+	<div>
+		<button onclick="zoom(1);" > zoom in</button>
+		<button onclick="zoom(-1);">zoom out</button>
 
+	</div>
 	<div>
 		<button onclick="map.flyTo(trd, 10);" >flyTo TRD</button>
 		<button onclick="map.flyTo(kyiv, 10);">flyTo Kiev</button>
@@ -141,7 +144,7 @@
 		});
 
 
-		var map = L.map('map', {rotate: true})
+		var map = L.map('map', {rotate: false})
 				.setView([55, 10], 0)
 				.addLayer(osm)
 				.addLayer(path);
@@ -182,6 +185,11 @@
 		function rotateFromButton(angle) {
 			document.getElementById('rho_input').valueAsNumber = angle;
 			map.setBearing(angle);
+		}
+
+
+		function zoom(diff) {
+			map.setZoom(map.getZoom()+diff,{animate :true, duration:10});
 		}
 
 		map.on('move rotate zoomend', function(ev) {

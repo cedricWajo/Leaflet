@@ -1,9 +1,9 @@
 /* @preserve
- * Leaflet 1.5.1+master.56b629d, a JS library for interactive maps. http://leafletjs.com
+ * Leaflet 1.5.1+master.5c57ccc, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2019 Vladimir Agafonkin, (c) 2010-2011 CloudMade
  */
 
-var version = "1.5.1+master.56b629db";
+var version = "1.5.1+master.5c57ccca";
 
 /*
  * @namespace Util
@@ -2462,9 +2462,10 @@ function setTransform(el, offset, scale, bearing, pivot) {
 				'translate3d(' + pos.x + 'px,' + pos.y + 'px,0)' +
 				(scale ? ' scale(' + scale + ')' : '') +
 				' rotate(' + bearing + 'rad)';
+		el.style.transformOrigin = '50% 100%';
 	}
 
-    el.style.transformOrigin = '50% 100%';
+    //el.style.transformOrigin = '50% 100%';
 }
 
 // @function setPosition(el: HTMLElement, position: Point)
@@ -3863,8 +3864,14 @@ var Map = Evented.extend({
 	// then returns it. The pane is created as a child of `container`, or
 	// as a child of the main map pane if not set.
 	createPane: function (name, container) {
-		var className = 'leaflet-pane' + (name ? ' leaflet-' + name.replace('Pane', '') + '-pane' : ''),
-		    pane = create$1('div', className, container || (this._rotate ? this._rotatePane : this._mapPane));
+		// if(!this.rotate) {
+		// 	var className = 'leaflet-pane' + (name ? ' leaflet-' + name.replace('Pane', '') + '-pane' : ''),
+		// 		pane = DomUtil.create('div', className, container || this._mapPane);
+		// } else {
+			var className = 'leaflet-pane' + (name ? ' leaflet-' + name.replace('Pane', '') + '-pane' : ''),
+				pane = create$1('div', className, container || (this._rotate ? this._rotatePane : this._mapPane));
+
+		// }
 
 		if (name) {
 			this._panes[name] = pane;
@@ -4795,7 +4802,7 @@ var Map = Evented.extend({
 
 	_animateZoom: function (center, zoom, startAnim, noUpdate) {
 		if (!this._mapPane) { return; }
-
+		console.log('animate zoom');
 		if (startAnim) {
 			this._animatingZoom = true;
 
