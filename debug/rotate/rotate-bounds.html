@@ -53,7 +53,7 @@
 			osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
 
 		var map = L.map('map', {rotate: true})
-				.setView([0, 0], 4)
+				.setView([0, 0], 20)
 				.addLayer(osm);
 
 		var marker = [50,4]
@@ -99,6 +99,14 @@
 		}
 
 		map.on('moveend zoomend resetview rotate', displayCenter);
+
+		let pos = [50,4];
+		setInterval(()=>{
+            pos[0]+=Math.random()/1000;
+            pos[1]+=Math.random()/1000;
+            L.marker(pos).addTo(map);
+            map.panTo(pos,{animate:true})
+        },3000)
 
 		displayCenter();
 

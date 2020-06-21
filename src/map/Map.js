@@ -347,8 +347,11 @@ export var Map = Evented.extend({
 		// animate pan unless animate: false specified
 		if (options.animate !== false) {
 			DomUtil.addClass(this._mapPane, 'leaflet-pan-anim');
-
-			var newPos = this._getMapPanePos().subtract(offset).round();
+			var newPos;
+			if(this._rotate)
+				newPos = this._getMapPanePos().subtract(offset.rotate(this._bearing)).round();
+			else
+				newPos = this._getMapPanePos().subtract(offset).round();
 			this._panAnim.run(this._mapPane, newPos, options.duration || 0.25, options.easeLinearity);
 		} else {
 			this._rawPanBy(offset);
@@ -859,13 +862,11 @@ export var Map = Evented.extend({
 	// Returns the geographical bounds visible in the current map view
 	getBounds: function () {
 		if (this._rotate ) {
-			console.log('start')
-			console.log(this._bearing)
+
 			if(this._bearing%Math.PI<Math.PI/2 ) {
 				var dy = new Point(0,this.getSize().x * Math.sin(this._bearing));
 			} else {
 				var dy = new Point(-this.getSize().x * Math.cos(this._bearing),0);
-				console.log(dy)
 			}
 
 			//var dy = new Point(0,10);
@@ -1339,6 +1340,10 @@ export var Map = Evented.extend({
 	},
 
 	_rawPanBy: function (offset) {
+		if(this._rotate) {
+			DomUtil.setPosition(this._mapPane, this._getMapPanePos().subtract(offset.rotate(this._bearing)));
+			return
+		}
 		DomUtil.setPosition(this._mapPane, this._getMapPanePos().subtract(offset));
 	},
 
@@ -1678,6 +1683,7 @@ export var Map = Evented.extend({
 	_tryAnimatedPan: function (center, options) {
 		// difference between the new and current centers in pixels
 		var offset = this._getCenterOffset(center)._trunc();
+		console.log({offset:offset});
 
 		// don't animate too far unless animate: true specified in options
 		if ((options && options.animate) !== true && !this.getSize().contains(offset)) { return false; }
@@ -1759,7 +1765,6 @@ export var Map = Evented.extend({
 
 	_animateZoom: function (center, zoom, startAnim, noUpdate) {
 		if (!this._mapPane) { return; }
-		console.log('animate zoom')
 		if (startAnim) {
 			this._animatingZoom = true;
 
